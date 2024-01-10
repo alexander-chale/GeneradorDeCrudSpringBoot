@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.util.Properties;
 import java.util.Scanner;
 
-public class GeneradorCrudBcv {
+public class GeneradorCrud {
     public static void main(String[] args) throws IOException {
 
         Scanner entidad = new Scanner(System.in);
