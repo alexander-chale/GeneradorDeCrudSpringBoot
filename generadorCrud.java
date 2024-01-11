@@ -12,8 +12,32 @@ public class generadorCrud {
     public static void main(String[] args) throws IOException {
 
         Scanner entidad = new Scanner(System.in);
-        System.out.println("Ingrese el nombre de la entidad en camelCase");
-        String nombreEntidad = entidad.next();
+        String nombre = null;
+        String nombreEntidad = null;
+
+        Boolean verdadero = true;
+        while (verdadero) {
+            System.out.println("Ingrese el nombre de la entidad en camelCase");
+            nombre = entidad.next();
+
+            Utilitarios utilitarios = new Utilitarios();
+            nombreEntidad = utilitarios.validaPalabra(nombre);
+
+            System.out.println("asi quedo la palabra " + nombreEntidad);
+
+            if (!nombreEntidad.isEmpty()) {
+                verdadero = false;
+            } else {
+                verdadero = true;
+            }
+        }
+
+        Utilitarios utilitarios = new Utilitarios();
+        String entidadMayusculaInicial = utilitarios.generaMayusculaInicial(nombreEntidad);
+        System.out.println("asi quedo la mayuscula inicial " + entidadMayusculaInicial);
+
+        nombreEntidad = utilitarios.generaMinusculaInicial(nombreEntidad);
+        System.out.println("asi quedo la mayuscula inicial " + nombreEntidad);
 
         Scanner tipo = new Scanner(System.in);
         System.out.println("Ingrese 0 = Para id Long");
@@ -28,9 +52,6 @@ public class generadorCrud {
 
         String tipoEstructura = config.getProperty("tipoEstructura");
         String nombreDeAplicacion = config.getProperty("nombreDeAplicacion");
-
-        String nombreEntidadCamelCase = nombreEntidad.toUpperCase().charAt(0)
-                + nombreEntidad.substring(1, nombreEntidad.length());
 
         if ("0".equals(tipoEstructura)) {
             String directorioControlador = nombreEntidad + "/controller";
@@ -58,7 +79,7 @@ public class generadorCrud {
                 System.out.println("   Directorio " + nombreEntidad + "/controller creado satisfactoriamente.");
 
                 try (FileWriter fw = new FileWriter(
-                        directorioControlador + "/" + nombreEntidadCamelCase + "Controller.java",
+                        directorioControlador + "/" + entidadMayusculaInicial + "Controller.java",
                         true);
                         BufferedWriter bw = new BufferedWriter(fw);
                         PrintWriter out = new PrintWriter(bw)) {
@@ -78,24 +99,24 @@ public class generadorCrud {
                     }
 
                     out.println(
-                            "import " + nombreDeAplicacion + "." + nombreEntidad + ".entity." + nombreEntidadCamelCase
+                            "import " + nombreDeAplicacion + "." + nombreEntidad + ".entity." + entidadMayusculaInicial
                                     + ";");
                     out.println("import " + nombreDeAplicacion + "." + nombreEntidad + ".service.impl."
-                            + nombreEntidadCamelCase + "ServiceImpl;");
+                            + entidadMayusculaInicial + "ServiceImpl;");
                     out.println("");
                     out.println("@RestController");
                     out.println("@CrossOrigin(origins = \"*\")");
                     out.println("@RequestMapping(path = \"api/v1/" + nombreEntidad + "\")");
                     if ("0".equals(tipoId)) {
                         out.println(
-                                "public class " + nombreEntidadCamelCase
+                                "public class " + entidadMayusculaInicial
                                         + "Controller extends BaseControllerIdLongImpl<"
-                                        + nombreEntidadCamelCase + "," + nombreEntidadCamelCase + "ServiceImpl> {");
+                                        + entidadMayusculaInicial + "," + entidadMayusculaInicial + "ServiceImpl> {");
                     } else {
                         out.println(
-                                "public class " + nombreEntidadCamelCase
+                                "public class " + entidadMayusculaInicial
                                         + "Controller extends BaseControllerIdStringImpl<"
-                                        + nombreEntidadCamelCase + "," + nombreEntidadCamelCase + "ServiceImpl> {");
+                                        + entidadMayusculaInicial + "," + entidadMayusculaInicial + "ServiceImpl> {");
 
                     }
                     out.println("");
@@ -103,12 +124,12 @@ public class generadorCrud {
                     out.println("}");
 
                     if ("0".equals(tipoId)) {
-                        System.out.println("      Archivo " + nombreEntidadCamelCase
+                        System.out.println("      Archivo " + entidadMayusculaInicial
                                 + "Controller.java con Id Long creado satisfactoriamente.");
                     }
 
                     else {
-                        System.out.println("      Archivo " + nombreEntidadCamelCase
+                        System.out.println("      Archivo " + entidadMayusculaInicial
                                 + "Controller.java con Id String creado satisfactoriamente.");
 
                     }
@@ -141,38 +162,38 @@ public class generadorCrud {
             if (directorioRepository.mkdir()) {
                 System.out.println("   Directorio " + nombreEntidad + "/repository creado satisfactoriamente.");
                 try (FileWriter fw = new FileWriter(
-                        directorioRepositorio + "/" + nombreEntidadCamelCase + "Repository.java",
+                        directorioRepositorio + "/" + entidadMayusculaInicial + "Repository.java",
                         true);
                         BufferedWriter bw = new BufferedWriter(fw);
                         PrintWriter out = new PrintWriter(bw)) {
                     out.println("package " + nombreDeAplicacion + "." + nombreEntidad + ".repository;");
                     out.println("");
                     out.println("import org.springframework.stereotype.Repository;");
-                    out.println("import com.bcv.cusg." + nombreEntidad + ".entity." + nombreEntidadCamelCase + ";");
+                    out.println("import com.bcv.cusg." + nombreEntidad + ".entity." + entidadMayusculaInicial + ";");
                     out.println("import com.bcv.cusg.bases.repositories.BaseRepository;");
                     out.println("");
                     out.println("@Repository");
                     if ("0".equals(tipoId)) {
-                        out.println("public interface " + nombreEntidadCamelCase + "Repository extends BaseRepository<"
-                                + nombreEntidadCamelCase + ", Long> {");
+                        out.println("public interface " + entidadMayusculaInicial + "Repository extends BaseRepository<"
+                                + entidadMayusculaInicial + ", Long> {");
 
                     }
 
                     else {
-                        out.println("public interface " + nombreEntidadCamelCase + "Repository extends BaseRepository<"
-                                + nombreEntidadCamelCase + ", String> {");
+                        out.println("public interface " + entidadMayusculaInicial + "Repository extends BaseRepository<"
+                                + entidadMayusculaInicial + ", String> {");
 
                     }
                     out.println("");
                     out.println("");
                     out.println("}");
                     if ("0".equals(tipoId)) {
-                        System.out.println("      Archivo " + nombreEntidadCamelCase
+                        System.out.println("      Archivo " + entidadMayusculaInicial
                                 + "Repository.java con Id Long creado satisfactoriamente.");
                     }
 
                     else {
-                        System.out.println("      Archivo " + nombreEntidadCamelCase
+                        System.out.println("      Archivo " + entidadMayusculaInicial
                                 + "Repository.java con Id String creado satisfactoriamente.");
 
                     }
@@ -186,7 +207,7 @@ public class generadorCrud {
 
             if (directorioService.mkdir()) {
                 System.out.println("   Directorio " + nombreEntidad + "/service creado satisfactoriamente.");
-                try (FileWriter fw = new FileWriter(directorioServicio + "/" + nombreEntidadCamelCase + "Service.java",
+                try (FileWriter fw = new FileWriter(directorioServicio + "/" + entidadMayusculaInicial + "Service.java",
                         true);
                         BufferedWriter bw = new BufferedWriter(fw);
                         PrintWriter out = new PrintWriter(bw)) {
@@ -194,18 +215,18 @@ public class generadorCrud {
                     out.println("");
 
                     out.println(
-                            "import " + nombreDeAplicacion + "." + nombreEntidad + ".entity." + nombreEntidadCamelCase
+                            "import " + nombreDeAplicacion + "." + nombreEntidad + ".entity." + entidadMayusculaInicial
                                     + ";");
                     out.println("import com.bcv.cusg.bases.services.BaseService;");
                     out.println("");
                     if ("0".equals(tipoId)) {
-                        out.println("public interface " + nombreEntidadCamelCase + "Service extends BaseService<"
-                                + nombreEntidadCamelCase + ", Long> {");
+                        out.println("public interface " + entidadMayusculaInicial + "Service extends BaseService<"
+                                + entidadMayusculaInicial + ", Long> {");
                     }
 
                     else {
-                        out.println("public interface " + nombreEntidadCamelCase + "Service extends BaseService<"
-                                + nombreEntidadCamelCase + ", String> {");
+                        out.println("public interface " + entidadMayusculaInicial + "Service extends BaseService<"
+                                + entidadMayusculaInicial + ", String> {");
 
                     }
 
@@ -213,12 +234,12 @@ public class generadorCrud {
                     out.println("");
                     out.println("}");
                     if ("0".equals(tipoId)) {
-                        System.out.println("      Archivo " + nombreEntidadCamelCase
+                        System.out.println("      Archivo " + entidadMayusculaInicial
                                 + "Service.java con Id Long creado satisfactoriamente.");
                     }
 
                     else {
-                        System.out.println("      Archivo " + nombreEntidadCamelCase
+                        System.out.println("      Archivo " + entidadMayusculaInicial
                                 + "Service.java con Id String creado satisfactoriamente.");
 
                     }
@@ -233,7 +254,7 @@ public class generadorCrud {
             if (directorioServiceImpl.mkdir()) {
                 System.out.println("   Directorio " + nombreEntidad + "/service/impl creado satisfactoriamente.");
                 try (FileWriter fw = new FileWriter(
-                        directorioServicioImplementacion + "/" + nombreEntidadCamelCase + "ServiceImpl.java",
+                        directorioServicioImplementacion + "/" + entidadMayusculaInicial + "ServiceImpl.java",
                         true);
                         BufferedWriter bw = new BufferedWriter(fw);
                         PrintWriter out = new PrintWriter(bw)) {
@@ -243,43 +264,43 @@ public class generadorCrud {
                     out.println("import org.springframework.stereotype.Service;");
                     out.println("");
                     out.println(
-                            "import " + nombreDeAplicacion + "." + nombreEntidad + ".entity." + nombreEntidadCamelCase
+                            "import " + nombreDeAplicacion + "." + nombreEntidad + ".entity." + entidadMayusculaInicial
                                     + ";");
                     out.println("import " + nombreDeAplicacion + "." + nombreEntidad + ".repository."
-                            + nombreEntidadCamelCase + "Repository;");
+                            + entidadMayusculaInicial + "Repository;");
                     out.println(
-                            "import " + nombreDeAplicacion + "." + nombreEntidad + ".service." + nombreEntidadCamelCase
+                            "import " + nombreDeAplicacion + "." + nombreEntidad + ".service." + entidadMayusculaInicial
                                     + "Service;");
                     out.println("import " + nombreDeAplicacion + ".bases.repositories.BaseRepository;");
                     out.println("import " + nombreDeAplicacion + ".bases.services.BaseServiceImpl;");
                     out.println("");
                     out.println("@Service");
                     if ("0".equals(tipoId)) {
-                        out.println("public class " + nombreEntidadCamelCase + "ServiceImpl extends BaseServiceImpl<"
-                                + nombreEntidadCamelCase + ", Long> implements " + nombreEntidadCamelCase
+                        out.println("public class " + entidadMayusculaInicial + "ServiceImpl extends BaseServiceImpl<"
+                                + entidadMayusculaInicial + ", Long> implements " + entidadMayusculaInicial
                                 + "Service {");
 
                     }
 
                     else {
-                        out.println("public class " + nombreEntidadCamelCase + "ServiceImpl extends BaseServiceImpl<"
-                                + nombreEntidadCamelCase + ", String> implements " + nombreEntidadCamelCase
+                        out.println("public class " + entidadMayusculaInicial + "ServiceImpl extends BaseServiceImpl<"
+                                + entidadMayusculaInicial + ", String> implements " + entidadMayusculaInicial
                                 + "Service {");
 
                     }
                     out.println("");
                     out.println("@Autowired");
-                    out.println("private " + nombreEntidadCamelCase + "Repository " + nombreEntidad + "Repository;");
+                    out.println("private " + entidadMayusculaInicial + "Repository " + nombreEntidad + "Repository;");
                     out.println("");
                     if ("0".equals(tipoId)) {
-                        out.println("public " + nombreEntidadCamelCase + "ServiceImpl(BaseRepository<"
-                                + nombreEntidadCamelCase + ", Long> baseRepository) {");
+                        out.println("public " + entidadMayusculaInicial + "ServiceImpl(BaseRepository<"
+                                + entidadMayusculaInicial + ", Long> baseRepository) {");
 
                     }
 
                     else {
-                        out.println("public " + nombreEntidadCamelCase + "ServiceImpl(BaseRepository<"
-                                + nombreEntidadCamelCase + ", String> baseRepository) {");
+                        out.println("public " + entidadMayusculaInicial + "ServiceImpl(BaseRepository<"
+                                + entidadMayusculaInicial + ", String> baseRepository) {");
 
                     }
                     out.println("     super(baseRepository);");
@@ -287,12 +308,12 @@ public class generadorCrud {
                     out.println("");
                     out.println("}");
                     if ("0".equals(tipoId)) {
-                        System.out.println("      Archivo " + nombreEntidadCamelCase
+                        System.out.println("      Archivo " + entidadMayusculaInicial
                                 + "ServiceImpl.java con Id Long creado satisfactoriamente.");
                     }
 
                     else {
-                        System.out.println("      Archivo " + nombreEntidadCamelCase
+                        System.out.println("      Archivo " + entidadMayusculaInicial
                                 + "ServiceImpl.java con Id String creado satisfactoriamente.");
 
                     }
@@ -304,304 +325,351 @@ public class generadorCrud {
         } else {
             System.out.println("eligio la estructura normal esto hay que hacerlo" + tipoEstructura);
 
-            String directorioControlador = nombreDeAplicacion + "/controller";
-            String directorioEntidad = nombreDeAplicacion + "/entity";
-            String directorioEntidadDtos = nombreDeAplicacion + "/entity/dtos";
-            String directorioEntidadMapper = nombreDeAplicacion + "/entity/mapper";
-
-            String directorioRepositorio = nombreDeAplicacion + "/repository";
-            String directorioServicio = nombreDeAplicacion + "/service";
-            String directorioServicioImplementacion = nombreDeAplicacion + "/service/impl";
-
-            System.out.println("CREANDO LA ESTRUCTURA NORMAL DEL CRUD PARA SPRING BOOT... ");
-
-            // eliminamos la carpeta nombreEntidad con todos sus subcarpetas o archivos si
-            // existe
-
-            // File archivo = new File(nombreDeAplicacion);
-            // deleteFile(archivo);
-
-            File directorioPrincipal = new File(nombreDeAplicacion);
-
-            if (directorioPrincipal.mkdir()) {
-                System.out.println("   Directorio " + nombreDeAplicacion + " creado satisfactoriamente.");
-            } else {
-                System.out.println("El directorio principal ya existe");
-            }
-
-            File directorioController = new File(directorioControlador);
-
-            if (directorioController.mkdir()) {
-                System.out.println("   Directorio " + directorioControlador + " creado satisfactoriamente.");
-            } else {
-                System.out.println("El directorio Controlador ya existe");
-            }
-            File directorioEntity = new File(directorioEntidad);
-
-            if (directorioEntity.mkdir()) {
-                System.out.println("   Directorio " + directorioEntidad + " creado satisfactoriamente.");
-            } else {
-                System.out.println("El directorio Entidad ya existe");
-            }
-            File directorioEntityDtos = new File(directorioEntidadDtos);
-            if (directorioEntityDtos.mkdir()) {
-                System.out.println("   Directorio " + directorioEntidadDtos + " creado satisfactoriamente.");
-            } else {
-                System.out.println("El directorio Entidad Dtos ya existe");
-            }
-
-             File directorioEntityMapper = new File(directorioEntidadMapper);
-            if (directorioEntityMapper.mkdir()) {
-                System.out.println("   Directorio " + directorioEntidadMapper + " creado satisfactoriamente.");
-            } else {
-                System.out.println("El directorio Entidad Dtos ya existe");
-            }
-
-            File directorioRepository = new File(directorioRepositorio);
-            if (directorioRepository.mkdir()) {
-                System.out.println("   Directorio " + directorioRepositorio + " creado satisfactoriamente.");
-            } else {
-                System.out.println("El directorio repositorio ya existe");
-            }
-
-            File directorioService = new File(directorioServicio);
-            if (directorioService.mkdir()) {
-                System.out.println("   Directorio " + directorioServicio + " creado satisfactoriamente.");
-            } else {
-                System.out.println("El directorio servicio ya existe");
-            }
-            File directorioServiceImpl = new File(directorioServicioImplementacion);
-
-            if (directorioServiceImpl.mkdir()) {
-                System.out.println("   Directorio " + directorioServicioImplementacion + " creado satisfactoriamente.");
-            } else {
-                System.out.println("El directorio servicio implementacion ya existe");
-            }
-
-            try (FileWriter fw = new FileWriter(
-                    directorioControlador + "/" + nombreEntidadCamelCase + "Controller.java",
-                    true);
-                    BufferedWriter bw = new BufferedWriter(fw);
-                    PrintWriter out = new PrintWriter(bw)) {
-                out.println("package " + nombreDeAplicacion + "." + nombreEntidad + ".controller;");
-                out.println("");
-                out.println("import org.springframework.web.bind.annotation.CrossOrigin;");
-                out.println("import org.springframework.web.bind.annotation.RequestMapping;");
-                out.println("import org.springframework.web.bind.annotation.RestController;");
-                out.println("");
-                if ("0".equals(tipoId)) {
-                    out.println("import " + nombreDeAplicacion + ".bases.controllers.BaseControllerIdLongImpl;");
-                }
-
-                else {
-                    out.println("import " + nombreDeAplicacion + ".bases.controllers.BaseControllerIdStringImpl;");
-
-                }
-
-                out.println(
-                        "import " + nombreDeAplicacion + "." + nombreEntidad + ".entity." + nombreEntidadCamelCase
-                                + ";");
-                out.println("import " + nombreDeAplicacion + "." + nombreEntidad + ".service.impl."
-                        + nombreEntidadCamelCase + "ServiceImpl;");
-                out.println("");
-                out.println("@RestController");
-                out.println("@CrossOrigin(origins = \"*\")");
-                out.println("@RequestMapping(path = \"api/v1/" + nombreEntidad + "\")");
-                if ("0".equals(tipoId)) {
-                    out.println(
-                            "public class " + nombreEntidadCamelCase
-                                    + "Controller extends BaseControllerIdLongImpl<"
-                                    + nombreEntidadCamelCase + "," + nombreEntidadCamelCase + "ServiceImpl> {");
-                } else {
-                    out.println(
-                            "public class " + nombreEntidadCamelCase
-                                    + "Controller extends BaseControllerIdStringImpl<"
-                                    + nombreEntidadCamelCase + "," + nombreEntidadCamelCase + "ServiceImpl> {");
-
-                }
-                out.println("");
-                out.println("");
-                out.println("}");
-
-                if ("0".equals(tipoId)) {
-                    System.out.println("      Archivo " + nombreEntidadCamelCase
-                            + "Controller.java con Id Long creado satisfactoriamente.");
-                }
-
-                else {
-                    System.out.println("      Archivo " + nombreEntidadCamelCase
-                            + "Controller.java con Id String creado satisfactoriamente.");
-
-                }
-
-            } catch (IOException e) {
-                // exception handling left as an exercise for the reader
-            }
-
-          
-          
-
-            
-
-            if (directorioRepository.mkdir()) {
-                System.out.println("   Directorio " + nombreEntidad + "/repository creado satisfactoriamente.");
-                try (FileWriter fw = new FileWriter(
-                        directorioRepositorio + "/" + nombreEntidadCamelCase + "Repository.java",
-                        true);
-                        BufferedWriter bw = new BufferedWriter(fw);
-                        PrintWriter out = new PrintWriter(bw)) {
-                    out.println("package " + nombreDeAplicacion + "." + nombreEntidad + ".repository;");
-                    out.println("");
-                    out.println("import org.springframework.stereotype.Repository;");
-                    out.println("import com.bcv.cusg." + nombreEntidad + ".entity." + nombreEntidadCamelCase + ";");
-                    out.println("import com.bcv.cusg.bases.repositories.BaseRepository;");
-                    out.println("");
-                    out.println("@Repository");
-                    if ("0".equals(tipoId)) {
-                        out.println("public interface " + nombreEntidadCamelCase + "Repository extends BaseRepository<"
-                                + nombreEntidadCamelCase + ", Long> {");
-
-                    }
-
-                    else {
-                        out.println("public interface " + nombreEntidadCamelCase + "Repository extends BaseRepository<"
-                                + nombreEntidadCamelCase + ", String> {");
-
-                    }
-                    out.println("");
-                    out.println("");
-                    out.println("}");
-                    if ("0".equals(tipoId)) {
-                        System.out.println("      Archivo " + nombreEntidadCamelCase
-                                + "Repository.java con Id Long creado satisfactoriamente.");
-                    }
-
-                    else {
-                        System.out.println("      Archivo " + nombreEntidadCamelCase
-                                + "Repository.java con Id String creado satisfactoriamente.");
-
-                    }
-
-                } catch (IOException e) {
-                    // exception handling left as an exercise for the reader
-                }
-            }
-
-            if (directorioService.mkdir()) {
-                System.out.println("   Directorio " + nombreEntidad + "/service creado satisfactoriamente.");
-                try (FileWriter fw = new FileWriter(directorioServicio + "/" + nombreEntidadCamelCase + "Service.java",
-                        true);
-                        BufferedWriter bw = new BufferedWriter(fw);
-                        PrintWriter out = new PrintWriter(bw)) {
-                    out.println("package " + nombreDeAplicacion + "." + nombreEntidad + ".service;");
-                    out.println("");
-
-                    out.println(
-                            "import " + nombreDeAplicacion + "." + nombreEntidad + ".entity." + nombreEntidadCamelCase
-                                    + ";");
-                    out.println("import com.bcv.cusg.bases.services.BaseService;");
-                    out.println("");
-                    if ("0".equals(tipoId)) {
-                        out.println("public interface " + nombreEntidadCamelCase + "Service extends BaseService<"
-                                + nombreEntidadCamelCase + ", Long> {");
-                    }
-
-                    else {
-                        out.println("public interface " + nombreEntidadCamelCase + "Service extends BaseService<"
-                                + nombreEntidadCamelCase + ", String> {");
-
-                    }
-
-                    out.println("");
-                    out.println("");
-                    out.println("}");
-                    if ("0".equals(tipoId)) {
-                        System.out.println("      Archivo " + nombreEntidadCamelCase
-                                + "Service.java con Id Long creado satisfactoriamente.");
-                    }
-
-                    else {
-                        System.out.println("      Archivo " + nombreEntidadCamelCase
-                                + "Service.java con Id String creado satisfactoriamente.");
-
-                    }
-
-                } catch (IOException e) {
-                    // exception handling left as an exercise for the reader
-                }
-            }
-
-            if (directorioServiceImpl.mkdir()) {
-                System.out.println("   Directorio " + nombreEntidad + "/service/impl creado satisfactoriamente.");
-                try (FileWriter fw = new FileWriter(
-                        directorioServicioImplementacion + "/" + nombreEntidadCamelCase + "ServiceImpl.java",
-                        true);
-                        BufferedWriter bw = new BufferedWriter(fw);
-                        PrintWriter out = new PrintWriter(bw)) {
-                    out.println("package " + nombreDeAplicacion + "." + nombreEntidad + ".service.impl;");
-                    out.println("");
-                    out.println("import org.springframework.beans.factory.annotation.Autowired;");
-                    out.println("import org.springframework.stereotype.Service;");
-                    out.println("");
-                    out.println(
-                            "import " + nombreDeAplicacion + "." + nombreEntidad + ".entity." + nombreEntidadCamelCase
-                                    + ";");
-                    out.println("import " + nombreDeAplicacion + "." + nombreEntidad + ".repository."
-                            + nombreEntidadCamelCase + "Repository;");
-                    out.println(
-                            "import " + nombreDeAplicacion + "." + nombreEntidad + ".service." + nombreEntidadCamelCase
-                                    + "Service;");
-                    out.println("import " + nombreDeAplicacion + ".bases.repositories.BaseRepository;");
-                    out.println("import " + nombreDeAplicacion + ".bases.services.BaseServiceImpl;");
-                    out.println("");
-                    out.println("@Service");
-                    if ("0".equals(tipoId)) {
-                        out.println("public class " + nombreEntidadCamelCase + "ServiceImpl extends BaseServiceImpl<"
-                                + nombreEntidadCamelCase + ", Long> implements " + nombreEntidadCamelCase
-                                + "Service {");
-
-                    }
-
-                    else {
-                        out.println("public class " + nombreEntidadCamelCase + "ServiceImpl extends BaseServiceImpl<"
-                                + nombreEntidadCamelCase + ", String> implements " + nombreEntidadCamelCase
-                                + "Service {");
-
-                    }
-                    out.println("");
-                    out.println("@Autowired");
-                    out.println("private " + nombreEntidadCamelCase + "Repository " + nombreEntidad + "Repository;");
-                    out.println("");
-                    if ("0".equals(tipoId)) {
-                        out.println("public " + nombreEntidadCamelCase + "ServiceImpl(BaseRepository<"
-                                + nombreEntidadCamelCase + ", Long> baseRepository) {");
-
-                    }
-
-                    else {
-                        out.println("public " + nombreEntidadCamelCase + "ServiceImpl(BaseRepository<"
-                                + nombreEntidadCamelCase + ", String> baseRepository) {");
-
-                    }
-                    out.println("     super(baseRepository);");
-                    out.println("}");
-                    out.println("");
-                    out.println("}");
-                    if ("0".equals(tipoId)) {
-                        System.out.println("      Archivo " + nombreEntidadCamelCase
-                                + "ServiceImpl.java con Id Long creado satisfactoriamente.");
-                    }
-
-                    else {
-                        System.out.println("      Archivo " + nombreEntidadCamelCase
-                                + "ServiceImpl.java con Id String creado satisfactoriamente.");
-
-                    }
-
-                } catch (IOException e) {
-                    // exception handling left as an exercise for the reader
-                }
-            }
+            /*
+             * String directorioControlador = nombreDeAplicacion + "/controller";
+             * String directorioEntidad = nombreDeAplicacion + "/entity";
+             * String directorioEntidadDtos = nombreDeAplicacion + "/entity/dtos";
+             * String directorioEntidadMapper = nombreDeAplicacion + "/entity/mapper";
+             * 
+             * String directorioRepositorio = nombreDeAplicacion + "/repository";
+             * String directorioServicio = nombreDeAplicacion + "/service";
+             * String directorioServicioImplementacion = nombreDeAplicacion +
+             * "/service/impl";
+             * 
+             * System.out.
+             * println("CREANDO LA ESTRUCTURA NORMAL DEL CRUD PARA SPRING BOOT... ");
+             * 
+             * // eliminamos la carpeta nombreEntidad con todos sus subcarpetas o archivos
+             * si
+             * // existe
+             * 
+             * // File archivo = new File(nombreDeAplicacion);
+             * // deleteFile(archivo);
+             * 
+             * File directorioPrincipal = new File(nombreDeAplicacion);
+             * 
+             * if (directorioPrincipal.mkdir()) {
+             * System.out.println("   Directorio " + nombreDeAplicacion +
+             * " creado satisfactoriamente.");
+             * } else {
+             * System.out.println("El directorio principal ya existe");
+             * }
+             * 
+             * File directorioController = new File(directorioControlador);
+             * 
+             * if (directorioController.mkdir()) {
+             * System.out.println("   Directorio " + directorioControlador +
+             * " creado satisfactoriamente.");
+             * } else {
+             * System.out.println("El directorio Controlador ya existe");
+             * }
+             * File directorioEntity = new File(directorioEntidad);
+             * 
+             * if (directorioEntity.mkdir()) {
+             * System.out.println("   Directorio " + directorioEntidad +
+             * " creado satisfactoriamente.");
+             * } else {
+             * System.out.println("El directorio Entidad ya existe");
+             * }
+             * File directorioEntityDtos = new File(directorioEntidadDtos);
+             * if (directorioEntityDtos.mkdir()) {
+             * System.out.println("   Directorio " + directorioEntidadDtos +
+             * " creado satisfactoriamente.");
+             * } else {
+             * System.out.println("El directorio Entidad Dtos ya existe");
+             * }
+             * 
+             * File directorioEntityMapper = new File(directorioEntidadMapper);
+             * if (directorioEntityMapper.mkdir()) {
+             * System.out.println("   Directorio " + directorioEntidadMapper +
+             * " creado satisfactoriamente.");
+             * } else {
+             * System.out.println("El directorio Entidad Dtos ya existe");
+             * }
+             * 
+             * File directorioRepository = new File(directorioRepositorio);
+             * if (directorioRepository.mkdir()) {
+             * System.out.println("   Directorio " + directorioRepositorio +
+             * " creado satisfactoriamente.");
+             * } else {
+             * System.out.println("El directorio repositorio ya existe");
+             * }
+             * 
+             * File directorioService = new File(directorioServicio);
+             * if (directorioService.mkdir()) {
+             * System.out.println("   Directorio " + directorioServicio +
+             * " creado satisfactoriamente.");
+             * } else {
+             * System.out.println("El directorio servicio ya existe");
+             * }
+             * File directorioServiceImpl = new File(directorioServicioImplementacion);
+             * 
+             * if (directorioServiceImpl.mkdir()) {
+             * System.out.println("   Directorio " + directorioServicioImplementacion +
+             * " creado satisfactoriamente.");
+             * } else {
+             * System.out.println("El directorio servicio implementacion ya existe");
+             * }
+             * 
+             * try (FileWriter fw = new FileWriter(
+             * directorioControlador + "/" + entidadMayusculaInicial + "Controller.java",
+             * true);
+             * BufferedWriter bw = new BufferedWriter(fw);
+             * PrintWriter out = new PrintWriter(bw)) {
+             * out.println("package " + nombreDeAplicacion + "." + nombreEntidad +
+             * ".controller;");
+             * out.println("");
+             * out.println("import org.springframework.web.bind.annotation.CrossOrigin;");
+             * out.println("import org.springframework.web.bind.annotation.RequestMapping;"
+             * );
+             * out.println("import org.springframework.web.bind.annotation.RestController;"
+             * );
+             * out.println("");
+             * if ("0".equals(tipoId)) {
+             * out.println("import " + nombreDeAplicacion +
+             * ".bases.controllers.BaseControllerIdLongImpl;");
+             * }
+             * 
+             * else {
+             * out.println("import " + nombreDeAplicacion +
+             * ".bases.controllers.BaseControllerIdStringImpl;");
+             * 
+             * }
+             * 
+             * out.println(
+             * "import " + nombreDeAplicacion + "." + nombreEntidad + ".entity." +
+             * entidadMayusculaInicial
+             * + ";");
+             * out.println("import " + nombreDeAplicacion + "." + nombreEntidad +
+             * ".service.impl."
+             * + entidadMayusculaInicial + "ServiceImpl;");
+             * out.println("");
+             * out.println("@RestController");
+             * out.println("@CrossOrigin(origins = \"*\")");
+             * out.println("@RequestMapping(path = \"api/v1/" + nombreEntidad + "\")");
+             * if ("0".equals(tipoId)) {
+             * out.println(
+             * "public class " + entidadMayusculaInicial
+             * + "Controller extends BaseControllerIdLongImpl<"
+             * + entidadMayusculaInicial + "," + entidadMayusculaInicial +
+             * "ServiceImpl> {");
+             * } else {
+             * out.println(
+             * "public class " + entidadMayusculaInicial
+             * + "Controller extends BaseControllerIdStringImpl<"
+             * + entidadMayusculaInicial + "," + entidadMayusculaInicial +
+             * "ServiceImpl> {");
+             * 
+             * }
+             * out.println("");
+             * out.println("");
+             * out.println("}");
+             * 
+             * if ("0".equals(tipoId)) {
+             * System.out.println("      Archivo " + entidadMayusculaInicial
+             * + "Controller.java con Id Long creado satisfactoriamente.");
+             * }
+             * 
+             * else {
+             * System.out.println("      Archivo " + entidadMayusculaInicial
+             * + "Controller.java con Id String creado satisfactoriamente.");
+             * 
+             * }
+             * 
+             * } catch (IOException e) {
+             * // exception handling left as an exercise for the reader
+             * }
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
+             * if (directorioRepository.mkdir()) {
+             * System.out.println("   Directorio " + nombreEntidad +
+             * "/repository creado satisfactoriamente.");
+             * try (FileWriter fw = new FileWriter(
+             * directorioRepositorio + "/" + entidadMayusculaInicial + "Repository.java",
+             * true);
+             * BufferedWriter bw = new BufferedWriter(fw);
+             * PrintWriter out = new PrintWriter(bw)) {
+             * out.println("package " + nombreDeAplicacion + "." + nombreEntidad +
+             * ".repository;");
+             * out.println("");
+             * out.println("import org.springframework.stereotype.Repository;");
+             * out.println("import com.bcv.cusg." + nombreEntidad + ".entity." +
+             * entidadMayusculaInicial + ";");
+             * out.println("import com.bcv.cusg.bases.repositories.BaseRepository;");
+             * out.println("");
+             * out.println("@Repository");
+             * if ("0".equals(tipoId)) {
+             * out.println("public interface " + entidadMayusculaInicial +
+             * "Repository extends BaseRepository<"
+             * + entidadMayusculaInicial + ", Long> {");
+             * 
+             * }
+             * 
+             * else {
+             * out.println("public interface " + entidadMayusculaInicial +
+             * "Repository extends BaseRepository<"
+             * + entidadMayusculaInicial + ", String> {");
+             * 
+             * }
+             * out.println("");
+             * out.println("");
+             * out.println("}");
+             * if ("0".equals(tipoId)) {
+             * System.out.println("      Archivo " + entidadMayusculaInicial
+             * + "Repository.java con Id Long creado satisfactoriamente.");
+             * }
+             * 
+             * else {
+             * System.out.println("      Archivo " + entidadMayusculaInicial
+             * + "Repository.java con Id String creado satisfactoriamente.");
+             * 
+             * }
+             * 
+             * } catch (IOException e) {
+             * // exception handling left as an exercise for the reader
+             * }
+             * }
+             * 
+             * if (directorioService.mkdir()) {
+             * System.out.println("   Directorio " + nombreEntidad +
+             * "/service creado satisfactoriamente.");
+             * try (FileWriter fw = new FileWriter(directorioServicio + "/" +
+             * entidadMayusculaInicial + "Service.java",
+             * true);
+             * BufferedWriter bw = new BufferedWriter(fw);
+             * PrintWriter out = new PrintWriter(bw)) {
+             * out.println("package " + nombreDeAplicacion + "." + nombreEntidad +
+             * ".service;");
+             * out.println("");
+             * 
+             * out.println(
+             * "import " + nombreDeAplicacion + "." + nombreEntidad + ".entity." +
+             * entidadMayusculaInicial
+             * + ";");
+             * out.println("import com.bcv.cusg.bases.services.BaseService;");
+             * out.println("");
+             * if ("0".equals(tipoId)) {
+             * out.println("public interface " + entidadMayusculaInicial +
+             * "Service extends BaseService<"
+             * + entidadMayusculaInicial + ", Long> {");
+             * }
+             * 
+             * else {
+             * out.println("public interface " + entidadMayusculaInicial +
+             * "Service extends BaseService<"
+             * + entidadMayusculaInicial + ", String> {");
+             * 
+             * }
+             * 
+             * out.println("");
+             * out.println("");
+             * out.println("}");
+             * if ("0".equals(tipoId)) {
+             * System.out.println("      Archivo " + entidadMayusculaInicial
+             * + "Service.java con Id Long creado satisfactoriamente.");
+             * }
+             * 
+             * else {
+             * System.out.println("      Archivo " + entidadMayusculaInicial
+             * + "Service.java con Id String creado satisfactoriamente.");
+             * 
+             * }
+             * 
+             * } catch (IOException e) {
+             * // exception handling left as an exercise for the reader
+             * }
+             * }
+             * 
+             * if (directorioServiceImpl.mkdir()) {
+             * System.out.println("   Directorio " + nombreEntidad +
+             * "/service/impl creado satisfactoriamente.");
+             * try (FileWriter fw = new FileWriter(
+             * directorioServicioImplementacion + "/" + entidadMayusculaInicial +
+             * "ServiceImpl.java",
+             * true);
+             * BufferedWriter bw = new BufferedWriter(fw);
+             * PrintWriter out = new PrintWriter(bw)) {
+             * out.println("package " + nombreDeAplicacion + "." + nombreEntidad +
+             * ".service.impl;");
+             * out.println("");
+             * out.println("import org.springframework.beans.factory.annotation.Autowired;"
+             * );
+             * out.println("import org.springframework.stereotype.Service;");
+             * out.println("");
+             * out.println(
+             * "import " + nombreDeAplicacion + "." + nombreEntidad + ".entity." +
+             * entidadMayusculaInicial
+             * + ";");
+             * out.println("import " + nombreDeAplicacion + "." + nombreEntidad +
+             * ".repository."
+             * + entidadMayusculaInicial + "Repository;");
+             * out.println(
+             * "import " + nombreDeAplicacion + "." + nombreEntidad + ".service." +
+             * entidadMayusculaInicial
+             * + "Service;");
+             * out.println("import " + nombreDeAplicacion +
+             * ".bases.repositories.BaseRepository;");
+             * out.println("import " + nombreDeAplicacion +
+             * ".bases.services.BaseServiceImpl;");
+             * out.println("");
+             * out.println("@Service");
+             * if ("0".equals(tipoId)) {
+             * out.println("public class " + entidadMayusculaInicial +
+             * "ServiceImpl extends BaseServiceImpl<"
+             * + entidadMayusculaInicial + ", Long> implements " + entidadMayusculaInicial
+             * + "Service {");
+             * 
+             * }
+             * 
+             * else {
+             * out.println("public class " + entidadMayusculaInicial +
+             * "ServiceImpl extends BaseServiceImpl<"
+             * + entidadMayusculaInicial + ", String> implements " + entidadMayusculaInicial
+             * + "Service {");
+             * 
+             * }
+             * out.println("");
+             * out.println("@Autowired");
+             * out.println("private " + entidadMayusculaInicial + "Repository " +
+             * nombreEntidad + "Repository;");
+             * out.println("");
+             * if ("0".equals(tipoId)) {
+             * out.println("public " + entidadMayusculaInicial +
+             * "ServiceImpl(BaseRepository<"
+             * + entidadMayusculaInicial + ", Long> baseRepository) {");
+             * 
+             * }
+             * 
+             * else {
+             * out.println("public " + entidadMayusculaInicial +
+             * "ServiceImpl(BaseRepository<"
+             * + entidadMayusculaInicial + ", String> baseRepository) {");
+             * 
+             * }
+             * out.println("     super(baseRepository);");
+             * out.println("}");
+             * out.println("");
+             * out.println("}");
+             * if ("0".equals(tipoId)) {
+             * System.out.println("      Archivo " + entidadMayusculaInicial
+             * + "ServiceImpl.java con Id Long creado satisfactoriamente.");
+             * }
+             * 
+             * else {
+             * System.out.println("      Archivo " + entidadMayusculaInicial
+             * + "ServiceImpl.java con Id String creado satisfactoriamente.");
+             * 
+             * }
+             * 
+             * } catch (IOException e) {
+             * // exception handling left as an exercise for the reader
+             * }
+             * }
+             */
         }
 
     }
@@ -620,5 +688,7 @@ public class generadorCrud {
         } else
             // System.out.println("el archivo no existe");
             ;
+
     }
+
 }
