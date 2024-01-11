@@ -14,35 +14,51 @@ public class generadorCrud {
         Scanner entidad = new Scanner(System.in);
         String nombre = null;
         String nombreEntidad = null;
+        Integer tipoId = null;
+        Utilitarios utilitarios = new Utilitarios();
+        Scanner tipo = new Scanner(System.in);
 
         Boolean verdadero = true;
         while (verdadero) {
             System.out.println("Ingrese el nombre de la entidad en camelCase");
             nombre = entidad.next();
 
-            Utilitarios utilitarios = new Utilitarios();
             nombreEntidad = utilitarios.validaPalabra(nombre);
 
-            System.out.println("asi quedo la palabra " + nombreEntidad);
+            // System.out.println("asi quedo la palabra " + nombreEntidad);
 
             if (!nombreEntidad.isEmpty()) {
                 verdadero = false;
+                //entidad.close();
+            } else {
+                verdadero = true;
+                
+            }
+        }
+
+        String entidadMayusculaInicial = utilitarios.generaMayusculaInicial(nombreEntidad);
+        // System.out.println("asi quedo la mayuscula inicial " +
+        // entidadMayusculaInicial);
+
+        nombreEntidad = utilitarios.generaMinusculaInicial(nombreEntidad);
+        // System.out.println("asi quedo la mayuscula inicial " + nombreEntidad);
+
+        verdadero = true;
+        while (verdadero) {
+            
+            System.out.println("Ingrese 0 = Para id Long");
+            System.out.println("Ingrese 1 = Para id String");
+            tipoId = tipo.nextInt();
+            System.out.println("este es el numero de antes " + tipoId);
+            tipoId = utilitarios.valida0o1(tipoId);
+            System.out.println("este es el numero que me entrego " + tipoId);
+            if ((tipoId == 0) || (tipoId == 1)) {
+                verdadero = false;
+                //tipo.close();
             } else {
                 verdadero = true;
             }
         }
-
-        Utilitarios utilitarios = new Utilitarios();
-        String entidadMayusculaInicial = utilitarios.generaMayusculaInicial(nombreEntidad);
-        System.out.println("asi quedo la mayuscula inicial " + entidadMayusculaInicial);
-
-        nombreEntidad = utilitarios.generaMinusculaInicial(nombreEntidad);
-        System.out.println("asi quedo la mayuscula inicial " + nombreEntidad);
-
-        Scanner tipo = new Scanner(System.in);
-        System.out.println("Ingrese 0 = Para id Long");
-        System.out.println("Ingrese 1 = Para id String");
-        String tipoId = tipo.next();
 
         Properties config = new Properties();
         InputStream configInput = null;
@@ -66,7 +82,7 @@ public class generadorCrud {
             // existe
 
             File archivo = new File(nombreEntidad);
-            deleteFile(archivo);
+            utilitarios.deleteFile(archivo);
 
             File directorioPrincipal = new File(nombreEntidad);
 
@@ -89,7 +105,7 @@ public class generadorCrud {
                     out.println("import org.springframework.web.bind.annotation.RequestMapping;");
                     out.println("import org.springframework.web.bind.annotation.RestController;");
                     out.println("");
-                    if ("0".equals(tipoId)) {
+                    if (0 == tipoId) {
                         out.println("import " + nombreDeAplicacion + ".bases.controllers.BaseControllerIdLongImpl;");
                     }
 
@@ -107,7 +123,7 @@ public class generadorCrud {
                     out.println("@RestController");
                     out.println("@CrossOrigin(origins = \"*\")");
                     out.println("@RequestMapping(path = \"api/v1/" + nombreEntidad + "\")");
-                    if ("0".equals(tipoId)) {
+                    if (0 == tipoId) {
                         out.println(
                                 "public class " + entidadMayusculaInicial
                                         + "Controller extends BaseControllerIdLongImpl<"
@@ -123,7 +139,7 @@ public class generadorCrud {
                     out.println("");
                     out.println("}");
 
-                    if ("0".equals(tipoId)) {
+                    if (0 == tipoId) {
                         System.out.println("      Archivo " + entidadMayusculaInicial
                                 + "Controller.java con Id Long creado satisfactoriamente.");
                     }
@@ -173,7 +189,7 @@ public class generadorCrud {
                     out.println("import com.bcv.cusg.bases.repositories.BaseRepository;");
                     out.println("");
                     out.println("@Repository");
-                    if ("0".equals(tipoId)) {
+                    if (0 == tipoId) {
                         out.println("public interface " + entidadMayusculaInicial + "Repository extends BaseRepository<"
                                 + entidadMayusculaInicial + ", Long> {");
 
@@ -187,7 +203,7 @@ public class generadorCrud {
                     out.println("");
                     out.println("");
                     out.println("}");
-                    if ("0".equals(tipoId)) {
+                    if (0 == tipoId) {
                         System.out.println("      Archivo " + entidadMayusculaInicial
                                 + "Repository.java con Id Long creado satisfactoriamente.");
                     }
@@ -219,7 +235,7 @@ public class generadorCrud {
                                     + ";");
                     out.println("import com.bcv.cusg.bases.services.BaseService;");
                     out.println("");
-                    if ("0".equals(tipoId)) {
+                    if (0 == tipoId) {
                         out.println("public interface " + entidadMayusculaInicial + "Service extends BaseService<"
                                 + entidadMayusculaInicial + ", Long> {");
                     }
@@ -233,7 +249,7 @@ public class generadorCrud {
                     out.println("");
                     out.println("");
                     out.println("}");
-                    if ("0".equals(tipoId)) {
+                    if (0 == tipoId) {
                         System.out.println("      Archivo " + entidadMayusculaInicial
                                 + "Service.java con Id Long creado satisfactoriamente.");
                     }
@@ -275,7 +291,7 @@ public class generadorCrud {
                     out.println("import " + nombreDeAplicacion + ".bases.services.BaseServiceImpl;");
                     out.println("");
                     out.println("@Service");
-                    if ("0".equals(tipoId)) {
+                    if (0 == tipoId) {
                         out.println("public class " + entidadMayusculaInicial + "ServiceImpl extends BaseServiceImpl<"
                                 + entidadMayusculaInicial + ", Long> implements " + entidadMayusculaInicial
                                 + "Service {");
@@ -292,7 +308,7 @@ public class generadorCrud {
                     out.println("@Autowired");
                     out.println("private " + entidadMayusculaInicial + "Repository " + nombreEntidad + "Repository;");
                     out.println("");
-                    if ("0".equals(tipoId)) {
+                    if (0 == tipoId) {
                         out.println("public " + entidadMayusculaInicial + "ServiceImpl(BaseRepository<"
                                 + entidadMayusculaInicial + ", Long> baseRepository) {");
 
@@ -307,7 +323,7 @@ public class generadorCrud {
                     out.println("}");
                     out.println("");
                     out.println("}");
-                    if ("0".equals(tipoId)) {
+                    if (0 == tipoId) {
                         System.out.println("      Archivo " + entidadMayusculaInicial
                                 + "ServiceImpl.java con Id Long creado satisfactoriamente.");
                     }
@@ -425,7 +441,7 @@ public class generadorCrud {
              * out.println("import org.springframework.web.bind.annotation.RestController;"
              * );
              * out.println("");
-             * if ("0".equals(tipoId)) {
+             * if (0 == tipoId) {
              * out.println("import " + nombreDeAplicacion +
              * ".bases.controllers.BaseControllerIdLongImpl;");
              * }
@@ -447,7 +463,7 @@ public class generadorCrud {
              * out.println("@RestController");
              * out.println("@CrossOrigin(origins = \"*\")");
              * out.println("@RequestMapping(path = \"api/v1/" + nombreEntidad + "\")");
-             * if ("0".equals(tipoId)) {
+             * if (0 == tipoId) {
              * out.println(
              * "public class " + entidadMayusculaInicial
              * + "Controller extends BaseControllerIdLongImpl<"
@@ -465,7 +481,7 @@ public class generadorCrud {
              * out.println("");
              * out.println("}");
              * 
-             * if ("0".equals(tipoId)) {
+             * if (0 == tipoId) {
              * System.out.println("      Archivo " + entidadMayusculaInicial
              * + "Controller.java con Id Long creado satisfactoriamente.");
              * }
@@ -502,7 +518,7 @@ public class generadorCrud {
              * out.println("import com.bcv.cusg.bases.repositories.BaseRepository;");
              * out.println("");
              * out.println("@Repository");
-             * if ("0".equals(tipoId)) {
+             * if (0 == tipoId) {
              * out.println("public interface " + entidadMayusculaInicial +
              * "Repository extends BaseRepository<"
              * + entidadMayusculaInicial + ", Long> {");
@@ -518,7 +534,7 @@ public class generadorCrud {
              * out.println("");
              * out.println("");
              * out.println("}");
-             * if ("0".equals(tipoId)) {
+             * if (0 == tipoId) {
              * System.out.println("      Archivo " + entidadMayusculaInicial
              * + "Repository.java con Id Long creado satisfactoriamente.");
              * }
@@ -552,7 +568,7 @@ public class generadorCrud {
              * + ";");
              * out.println("import com.bcv.cusg.bases.services.BaseService;");
              * out.println("");
-             * if ("0".equals(tipoId)) {
+             * if (0 == tipoId) {
              * out.println("public interface " + entidadMayusculaInicial +
              * "Service extends BaseService<"
              * + entidadMayusculaInicial + ", Long> {");
@@ -568,7 +584,7 @@ public class generadorCrud {
              * out.println("");
              * out.println("");
              * out.println("}");
-             * if ("0".equals(tipoId)) {
+             * if (0 == tipoId) {
              * System.out.println("      Archivo " + entidadMayusculaInicial
              * + "Service.java con Id Long creado satisfactoriamente.");
              * }
@@ -617,7 +633,7 @@ public class generadorCrud {
              * ".bases.services.BaseServiceImpl;");
              * out.println("");
              * out.println("@Service");
-             * if ("0".equals(tipoId)) {
+             * if (0 == tipoId) {
              * out.println("public class " + entidadMayusculaInicial +
              * "ServiceImpl extends BaseServiceImpl<"
              * + entidadMayusculaInicial + ", Long> implements " + entidadMayusculaInicial
@@ -637,7 +653,7 @@ public class generadorCrud {
              * out.println("private " + entidadMayusculaInicial + "Repository " +
              * nombreEntidad + "Repository;");
              * out.println("");
-             * if ("0".equals(tipoId)) {
+             * if (0 == tipoId) {
              * out.println("public " + entidadMayusculaInicial +
              * "ServiceImpl(BaseRepository<"
              * + entidadMayusculaInicial + ", Long> baseRepository) {");
@@ -654,7 +670,7 @@ public class generadorCrud {
              * out.println("}");
              * out.println("");
              * out.println("}");
-             * if ("0".equals(tipoId)) {
+             * if (0 == tipoId) {
              * System.out.println("      Archivo " + entidadMayusculaInicial
              * + "ServiceImpl.java con Id Long creado satisfactoriamente.");
              * }
@@ -671,23 +687,6 @@ public class generadorCrud {
              * }
              */
         }
-
-    }
-
-    public static void deleteFile(File file) {
-        if (file.exists()) {
-            if (file.isFile())
-                file.delete();
-            else {
-                File f[] = file.listFiles();
-                for (int i = 0; i < f.length; i++) {
-                    deleteFile(f[i]);
-                }
-                file.delete();
-            }
-        } else
-            // System.out.println("el archivo no existe");
-            ;
 
     }
 
